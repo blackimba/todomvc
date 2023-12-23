@@ -29,10 +29,17 @@ var app = app || {};
 	};
 
 	app.TodoModel.prototype.addTodo = function (title) {
+		const formatedDate = Intl.DateTimeFormat("my", {
+			year: 'numeric',
+			month: '2-digit',
+			day: "2-digit"
+		}).format(new Date())
+		
 		this.todos = this.todos.concat({
 			id: Utils.uuid(),
 			title: title,
-			completed: false
+			completed: false,
+			dateCreated: formatedDate
 		});
 
 		this.inform();

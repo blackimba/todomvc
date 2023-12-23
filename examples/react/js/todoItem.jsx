@@ -91,6 +91,7 @@ var app = app || {};
 						<label onDoubleClick={this.handleEdit}>
 							{this.props.todo.title}
 						</label>
+						<span style={{position: 'absolute', top: 0, bottom: 0, right: '60px', display: "flex", alignItems: 'center'}}>{this.props.todo.dateCreated}</span>
 						<button className="destroy" onClick={this.props.onDestroy} />
 					</div>
 					<input

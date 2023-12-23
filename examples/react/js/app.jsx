@@ -21,7 +21,8 @@ var app = app || {};
 			return {
 				nowShowing: app.ALL_TODOS,
 				editing: null,
-				newTodo: ''
+				newTodo: '',
+				isError: false,
 			};
 		},
 
@@ -36,7 +37,23 @@ var app = app || {};
 		},
 
 		handleChange: function (event) {
+			console.log("Todos:", this.state.nowShowing)
 			this.setState({newTodo: event.target.value});
+		},
+
+		handleCheckTitle: function (newTodo, todos) {
+			console.log("Valid")
+			var valid = true;
+
+			todos.map(todo => {
+				if(todo.title === newTodo) {
+					valid = false
+				}
+			})
+
+			console.log("Valid Title: ", valid)
+
+			return valid
 		},
 
 		handleNewTodoKeyDown: function (event) {
@@ -47,11 +64,25 @@ var app = app || {};
 			event.preventDefault();
 
 			var val = this.state.newTodo.trim();
+			var currentTodos = this.props.model.todos
 
-			if (val) {
-				this.props.model.addTodo(val);
-				this.setState({newTodo: ''});
+			console.log("TodoItems: ", currentTodos)
+			console.log("New Todo: ", val)
+
+			if(!val) {
+				return;
 			}
+
+			var isValid = this.handleCheckTitle(val, currentTodos);
+
+			console.log(isValid)
+
+			if(isValid) {
+				this.props.model.addTodo(val);
+			}
+			
+			this.setState({newTodo: ''});
+			this.setState({ isError: !isValid })
 		},
 
 		toggleAll: function (event) {
@@ -163,6 +194,7 @@ var app = app || {};
 							onChange={this.handleChange}
 							autoFocus={true}
 						/>
+						{this.state.isError ? (<p style={{color: 'red', marginLeft: '15px'}}>Invalid Title</p>): null}
 					</header>
 					{main}
 					{footer}
